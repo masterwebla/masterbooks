@@ -15,6 +15,7 @@
           <div class="col-lg-6">
             <div class="card">
               <div class="card-body">
+                @include('backoffice.secciones.errores')
               	<form action="{{ route('productos.store') }}" method="post" enctype="multipart/form-data">
                   @csrf
                   <div class="form-group">

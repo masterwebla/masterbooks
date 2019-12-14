@@ -31,7 +31,54 @@ class ProductosController extends Controller
     //Función para guardar un producto
     public function store(Request $request)
     {
-        return $request;
+        
+        //Validar los campos
+        $request->validate([
+            'isbn'=>'required|max:100',
+            'nombre'=>'required|max:100',
+            'precio'=>'required|numeric',
+            'imagen' => 'required|mimes:jpeg,jpg,png',
+            'archivo' => 'mimes:pdf|max:10000',
+            'categoria_id' => 'required',
+            'autor_id' => 'required',
+            'tipo_id' => 'required',
+            'estado_id' => 'required'
+        ]);
+
+        //Subir la imagen al servidor
+        $nombreimg = "";
+        if($request->file('imagen')){
+            $imagen = $request->file('imagen');
+            $ruta = public_path().'/imgproductos';
+            $nombreimg = uniqid()."-".$imagen->getClientOriginalName();
+            $imagen->move($ruta,$nombreimg);
+        }
+
+        //Subir el pdf al servidor
+        $nombrepdf = "";
+        if($request->file('archivo')){
+            $archivo = $request->file('archivo');
+            $ruta = public_path().'/libros';
+            $nombrepdf = uniqid()."-".$archivo->getClientOriginalName();
+            $archivo->move($ruta,$nombrepdf);
+        }
+
+        //Insertarlos en la base de datos
+        $producto = Producto::create([
+            'isbn'=>$request->isbn,
+            'nombre'=>$request->nombre,
+            'descripcion'=>$request->descripcion,
+            'precio'=>$request->precio,
+            'imagen'=>$nombreimg,
+            'archivo'=>$nombrepdf,
+            'categoria_id'=>$request->categoria_id,
+            'autor_id'=>$request->autor_id,
+            'tipo_id'=>$request->tipo_id,
+            'estado_id'=>$request->estado_id
+        ]);
+
+        return redirect()->route('productos.index');
+
     }
 
     /**

@@ -25,6 +25,8 @@
                 		<th>Nombre</th>
                 		<th>Descripcion</th>
                 		<th>Precio</th>
+                		<th>Imagen</th>
+                		<th>Archivo</th>
                 		<th>Opciones</th>
                 	</thead>
                 	<tbody>
@@ -34,6 +36,8 @@
 	                			<td>{{$producto->nombre}}</td>
 	                			<td>{{$producto->descripcion}}</td>
 	                			<td>${{$producto->precio}}</td>
+	                			<td><img src="{{ asset('imgproductos/'.$producto->imagen.'') }}" alt="" width="50"></td>
+	                			<td>{{$producto->archivo}}</td>
 	                			<td></td>
 	                		</tr>
 	                	@endforeach
