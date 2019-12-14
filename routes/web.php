@@ -12,5 +12,5 @@
 */
 
 Route::get('/', function () {
-    return view('backoffice.template');
+    return view('backoffice.productos.index');
 });
