@@ -4,38 +4,34 @@ namespace App\Http\Controllers\backoffice;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Producto;
+use App\Categoria;
+use App\Autor;
+use App\Estadoproducto;
+use App\Tipo;
 
 class ProductosController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    //Listar los productos
     public function index()
     {
-        //
+        $productos = Producto::all();
+        return view('backoffice.productos.index',compact('productos'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        //
+        $categorias = Categoria::all();
+        $autores = Autor::all();
+        $tipos = Tipo::all();
+        $estados = Estadoproducto::all();
+        return view('backoffice.productos.crear',compact('categorias','autores','tipos','estados'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    //Función para guardar un producto
     public function store(Request $request)
     {
-        //
+        return $request;
     }
 
     /**
