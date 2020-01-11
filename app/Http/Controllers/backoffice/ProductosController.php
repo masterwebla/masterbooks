@@ -81,48 +81,92 @@ class ProductosController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
-        //
+        $producto = Producto::find($id);
+        $categorias = Categoria::all();
+        $autores = Autor::all();
+        $tipos = Tipo::all();
+        $estados = Estadoproducto::all();
+        return view('backoffice.productos.editar',compact('producto','categorias','autores','tipos','estados'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    //Función para actualizar
     public function update(Request $request, $id)
     {
-        //
+        //Validar los campos
+        $request->validate([
+            'isbn'=>'required|max:100',
+            'nombre'=>'required|max:100',
+            'precio'=>'required|numeric',
+            'imagen' => 'mimes:jpeg,jpg,png',
+            'archivo' => 'mimes:pdf|max:10000',
+            'categoria_id' => 'required',
+            'autor_id' => 'required',
+            'tipo_id' => 'required',
+            'estado_id' => 'required'
+        ]);
+
+        //Subir la imagen al servidor
+        $nombreimg = "";
+        if($request->file('imagen')){
+            $imagen = $request->file('imagen');
+            $ruta = public_path().'/imgproductos';
+            $nombreimg = uniqid()."-".$imagen->getClientOriginalName();
+            $imagen->move($ruta,$nombreimg);
+        }
+
+        //Subir el pdf al servidor
+        $nombrepdf = "";
+        if($request->file('archivo')){
+            $archivo = $request->file('archivo');
+            $ruta = public_path().'/libros';
+            $nombrepdf = uniqid()."-".$archivo->getClientOriginalName();
+            $archivo->move($ruta,$nombrepdf);
+        }
+
+
+        $producto = Producto::find($id);
+        $producto->isbn = $request->isbn;
+        $producto->nombre = $request->nombre;
+        $producto->descripcion = $request->descripcion;
+        $producto->precio = $request->precio;
+        if($request->file('imagen'))
+            $producto->imagen = $nombreimg;
+        if($request->file('archivo'))
+            $producto->archivo = $nombrepdf;
+        $producto->categoria_id = $request->categoria_id;
+        $producto->autor_id = $request->autor_id;
+        $producto->tipo_id = $request->tipo_id;
+        $producto->estado_id = $request->estado_id;
+        $producto->save();
+
+        return redirect()->route('productos.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         //
+    }
+
+    public function inactivar($id){
+        $producto = Producto::find($id);
+        $producto->estado_id = 3;
+        $producto->save();
+
+        return redirect()->route('productos.index');
+    }
+
+    public function activar($id){
+        $producto = Producto::find($id);
+        $producto->estado_id = 1;
+        $producto->save();
+
+        return redirect()->route('productos.index');
     }
 }

@@ -31,14 +31,22 @@
                 	</thead>
                 	<tbody>
                 		@foreach($productos as $producto)
-	                		<tr>
+	                		<tr @if($producto->estado_id==3) class="table-danger" @endif>
 	                			<td>{{$producto->isbn}}</td>
 	                			<td>{{$producto->nombre}}</td>
 	                			<td>{{$producto->descripcion}}</td>
 	                			<td>${{$producto->precio}}</td>
 	                			<td><img src="{{ asset('imgproductos/'.$producto->imagen.'') }}" alt="" width="50"></td>
 	                			<td>{{$producto->archivo}}</td>
-	                			<td></td>
+	                			<td>
+                          <a class="btn btn-warning" href="{{ route('productos.edit',$producto->id) }}"><i class="fas fa-edit"></i></a>
+                          @if($producto->estado_id<3)
+                            <a class="btn btn-danger" href="{{ route('productos.inactivar',$producto->id) }}"><i class="fas fa-trash"></i></a>
+                          @else
+                            <a class="btn btn-success" href="{{ route('productos.activar',$producto->id) }}"><i class="fas fa-check"></i></a>
+                          @endif
+
+                        </td>
 	                		</tr>
 	                	@endforeach
                 	</tbody>
