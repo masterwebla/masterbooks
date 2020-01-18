@@ -4,6 +4,8 @@ namespace App\Http\Controllers\backoffice;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ProductoCreado;
 use App\Producto;
 use App\Categoria;
 use App\Autor;
@@ -13,10 +15,13 @@ use App\Tipo;
 class ProductosController extends Controller
 {
     //Listar los productos
-    public function index()
+    public function index(Request $request)
     {
-        $productos = Producto::all();
-        return view('backoffice.productos.index',compact('productos'));
+        $categorias = Categoria::all();
+        $productos = Producto::nombre($request->nombre)
+                        ->categoria($request->categoria_id)
+                        ->precio($request->desde,$request->hasta)->get();
+        return view('backoffice.productos.index',compact('productos','categorias'));
     }
 
     public function create()
@@ -76,6 +81,12 @@ class ProductosController extends Controller
             'tipo_id'=>$request->tipo_id,
             'estado_id'=>$request->estado_id
         ]);
+
+        //Envia mail
+        $emailrx = "info@masterweb.la";
+        $nombre = $request->nombre;
+        $precio = $request->precio;
+        Mail::to($emailrx)->send(new ProductoCreado($nombre,$precio));
 
         return redirect()->route('productos.index');
 
