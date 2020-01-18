@@ -18,7 +18,7 @@
               	<div class="text-right">
               		<a class="btn btn-success" href="{{ route('productos.create') }}"><i class="fas fa-plus"></i></a>
                   <!-- EXPORTAR PDF -->
-                  <a class="btn btn-primary" href=""><i class="fas fa-file-pdf"></i></a>
+                  <a class="btn btn-primary" href="{{ route('productos.pdf') }}"><i class="fas fa-file-pdf"></i></a>
 
                   <!-- FILTROS -->
                   <?php

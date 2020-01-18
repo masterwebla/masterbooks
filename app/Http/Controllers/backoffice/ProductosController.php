@@ -5,6 +5,8 @@ namespace App\Http\Controllers\backoffice;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\View;
 use App\Mail\ProductoCreado;
 use App\Producto;
 use App\Categoria;
@@ -180,4 +182,14 @@ class ProductosController extends Controller
 
         return redirect()->route('productos.index');
     }
+
+    //Función para exportar a pdf
+    public function exportarPDF(){
+        $productos = Producto::all();
+        $pdf = App::make('dompdf.wrapper');
+        $vista = View::make('backoffice.productos.pdf',compact('productos'));
+        $pdf->loadHTML($vista);
+        return $pdf->download('productos.pdf');
+    }
+
 }
